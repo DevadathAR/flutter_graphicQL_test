@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:graphql_learning/widgets/itemDetailed.dart';
+import 'package:graphql_learning/pages/itemDetailed.dart';
 import 'package:graphql_learning/widgets/pageShow.dart';
 import 'package:graphql_learning/widgets/singleItem.dart';
 

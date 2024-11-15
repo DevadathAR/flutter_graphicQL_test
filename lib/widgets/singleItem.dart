@@ -28,7 +28,7 @@ class SingleIteam extends StatelessWidget {
               Expanded(
                 child: Image.network(
                   shirt,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fitHeight,
                   width: double.infinity,
                 ),
               ),

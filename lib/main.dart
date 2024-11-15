@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:graphql_learning/home.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:graphql_learning/pages/home.dart';
+import 'package:graphql_learning/services/graphqlClient.dart';
 import 'package:graphql_learning/widgets/itemBox.dart';
 
 void main() {
@@ -11,8 +13,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(debugShowCheckedModeBanner: false,
-      home: Home(body: IteamBox(),)
+    return GraphQLProvider(
+      client: getGraphQLClient(),
+      child: const MaterialApp(
+        home: Home(body: IteamBox()),
+      ),
     );
   }
 }
