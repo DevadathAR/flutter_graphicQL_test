@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:graphql_learning/full_view.dart';
+import 'package:graphql_learning/home.dart';
+import 'package:graphql_learning/widgets/itemBox.dart';
 
 void main() {
   runApp(const MainApp());
