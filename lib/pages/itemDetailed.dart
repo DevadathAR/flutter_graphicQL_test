@@ -7,16 +7,22 @@ import 'package:graphql_learning/widgets/stars.dart';
 
 class IteamDetailed extends StatelessWidget {
   final Map<String, dynamic> product; // Changed from List<String> to Map
-  const IteamDetailed({super.key, required this.product});
+  const IteamDetailed({
+    super.key,
+    required this.product,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final categories = product['categories'] ?? [];
+
+
     return Home(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: ListView(
           children: [
-            const PageShow(),
+            PageShow(categories: categories),
             _buildProductOverview(context),
             _buildColorOptions(),
             const SizedBox(height: 8),
@@ -55,23 +61,24 @@ class IteamDetailed extends StatelessWidget {
     );
   }
 
- Widget _buildProductOverview(BuildContext context) {
-  final name = product['name']?.toString() ?? 'Unnamed Product';
-final imageUrl = product['image']?['url'] ?? '';
-  final price = product['price']?.toString() ?? '0.00';
+  Widget _buildProductOverview(BuildContext context) {
+    final name = product['name']?.toString() ?? 'Unnamed Product';
+    final imageUrl = product['image']?['url'] ?? '';
+    final price = product['price']?.toString() ?? '0.00';
 
-  return Column(
-    children: [
-      SingleItem(
-        name: name,
-        imageUrl: imageUrl,
-        price: price,
-        isDetailed: true,
-        length: 400,
-      ),
-    ],
-  );
-}
+    return Column(
+      children: [
+        SingleItem(
+          name: name,
+          imageUrl: imageUrl,
+          price: price,
+          isDetailed: true,
+          length: 400,
+        ),
+      ],
+    );
+  }
+
   // Color Options
   Widget _buildColorOptions() {
     return const Row(
@@ -147,7 +154,8 @@ final imageUrl = product['image']?['url'] ?? '';
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _button(text: 'Add to Cart'),
-        _button(color: const Color.fromARGB(255, 126, 126, 126), text: 'Buy Now'),
+        _button(
+            color: const Color.fromARGB(255, 126, 126, 126), text: 'Buy Now'),
       ],
     );
   }
@@ -175,7 +183,8 @@ final imageUrl = product['image']?['url'] ?? '';
   }
 
   // Custom Widgets
-  Text _datum({required String datum, Color color = Colors.cyan, double? size}) {
+  Text _datum(
+      {required String datum, Color color = Colors.cyan, double? size}) {
     return Text(
       datum,
       style: TextStyle(color: color, fontSize: size),

@@ -18,6 +18,7 @@ class MainApp extends StatelessWidget {
     return GraphQLProvider(
       client: getGraphQLClient(),
       child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Home(body: IteamBox()),
       ),
     );

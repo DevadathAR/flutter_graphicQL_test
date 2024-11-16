@@ -35,13 +35,19 @@ class IteamBox extends StatelessWidget {
 
         final products = result.data?['products']['items'] ?? [];
 
+        final categories = products
+            .map((product) => product['categories'] ?? [])
+            .expand(
+                (categoryList) => categoryList is Iterable ? categoryList : [])
+            .toList();
+
         if (products.isEmpty) {
           return const Center(child: Text('No products found.'));
         }
 
         return Column(
           children: [
-            if (ispage) const PageShow(),
+            if (ispage) PageShow(categories: categories),
             Expanded(
               child: GridView.builder(
                 physics: scroll,
@@ -57,8 +63,8 @@ class IteamBox extends StatelessWidget {
                   final product = products[index];
                   final name = product['name'] ?? 'Unnamed Product';
                   final imageUrl = product['image']?['url'] ?? '';
-                  final price = product['price_range']?['minimum_price']
-                              ?['regular_price']?['value']
+                  final price = (product['price_range']?['minimum_price']
+                              ?['regular_price']?['value'] as num?)
                           ?.toStringAsFixed(2) ??
                       '0.00';
 

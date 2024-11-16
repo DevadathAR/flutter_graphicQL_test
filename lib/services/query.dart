@@ -7,7 +7,8 @@ const String getProductsQuery = r'''
         url
       }
       categories {
-        __typename
+        name
+        uid
       }
       rating_summary
       review_count
@@ -49,10 +50,3 @@ const String getProductsQuery = r'''
 ''';
 
 
-const totalCount = r'''
-{
-  products(search: "Yoga pants", pageSize: 1) {
-    total_count
-  }
-}
-''';
