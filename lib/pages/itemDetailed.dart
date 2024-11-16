@@ -55,21 +55,23 @@ class IteamDetailed extends StatelessWidget {
     );
   }
 
-  // Product Overview Section
-  Widget _buildProductOverview(BuildContext context) {
-    return Column(
-      children: [
-        SingleItem(
-          name: product['name'] ?? 'Unnamed Product',
-          imageUrl: product['image'] ?? '',
-          price: product['price'] ?? '0.00',
-          isDetailed: true,
-          length: 400,
-        ),
-      ],
-    );
-  }
+ Widget _buildProductOverview(BuildContext context) {
+  final name = product['name']?.toString() ?? 'Unnamed Product';
+final imageUrl = product['image']?['url'] ?? '';
+  final price = product['price']?.toString() ?? '0.00';
 
+  return Column(
+    children: [
+      SingleItem(
+        name: name,
+        imageUrl: imageUrl,
+        price: price,
+        isDetailed: true,
+        length: 400,
+      ),
+    ],
+  );
+}
   // Color Options
   Widget _buildColorOptions() {
     return const Row(
