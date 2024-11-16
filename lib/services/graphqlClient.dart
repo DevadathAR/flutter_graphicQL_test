@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 final HttpLink httpLink = HttpLink(
-  'https://countries.trevorblades.com/',
+  'https://flutter.ceymox.net/graphql'
 );
 
 ValueNotifier<GraphQLClient> getGraphQLClient() {
@@ -13,3 +13,5 @@ ValueNotifier<GraphQLClient> getGraphQLClient() {
     ),
   );
 }
+
+

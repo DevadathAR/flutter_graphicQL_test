@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:graphql_learning/constants/imagePath.dart';
 import 'package:graphql_learning/widgets/stars.dart';
 
-class SingleIteam extends StatelessWidget {
+class SingleItem extends StatelessWidget {
   final bool isDetailed;
   final double? length;
-  const SingleIteam({
+  final String name;
+  final String imageUrl;
+  final String price;
+  const SingleItem({
     super.key,
     this.length,
-    this.isDetailed = false,
+    this.isDetailed = false, required this.name, required this.imageUrl, required this.price,
   });
 
   @override
@@ -27,21 +30,21 @@ class SingleIteam extends StatelessWidget {
             children: [
               Expanded(
                 child: Image.network(
-                  shirt,
+                  imageUrl,
                   fit: BoxFit.fitHeight,
                   width: double.infinity,
                 ),
               ),
-              const Text('data'),
+               Text(name),
               if (isDetailed) const Stars(),
               RichText(
-                text: const TextSpan(
-                  text: 'dollar ',
-                  style: TextStyle(color: Colors.black),
+                text:  TextSpan(
+                  text: 'Rs  ',
+                  style: const TextStyle(color: Colors.black),
                   children: [
                     TextSpan(
-                      text: 'amount',
-                      style: TextStyle(color: Colors.black),
+                      text: price,
+                      style: const TextStyle(color: Colors.black),
                     ),
                   ],
                 ),

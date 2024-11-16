@@ -1,6 +1,6 @@
-// import 'package:empty_app/queries.dart';
 // import 'package:flutter/material.dart';
 // import 'package:graphql_flutter/graphql_flutter.dart';
+// import 'package:graphql_learning/graphQlExample/query.dart';
 
 // class Homepage extends StatelessWidget {
 //   const Homepage({super.key});
