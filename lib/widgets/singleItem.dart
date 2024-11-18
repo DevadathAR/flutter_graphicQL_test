@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:graphql_learning/constants/colors.dart';
 import 'package:graphql_learning/constants/imagePath.dart';
+import 'package:graphql_learning/constants/style.dart';
 import 'package:graphql_learning/widgets/stars.dart';
 
 class SingleItem extends StatelessWidget {
@@ -8,10 +10,17 @@ class SingleItem extends StatelessWidget {
   final String name;
   final String imageUrl;
   final String price;
+  final double rating; 
+  final int reviewCount;// Rating value (e.g., 4.5)
+
   const SingleItem({
     super.key,
     this.length,
-    this.isDetailed = false, required this.name, required this.imageUrl, required this.price,
+    this.isDetailed = false,
+    required this.name,
+    required this.imageUrl,
+    required this.price,
+    required this.rating, required this.reviewCount,
   });
 
   @override
@@ -35,10 +44,10 @@ class SingleItem extends StatelessWidget {
                   width: double.infinity,
                 ),
               ),
-               Text(name),
-              if (isDetailed) const Stars(),
+              Text(name),
+              if (isDetailed) Stars(rating: rating,reviewCount: reviewCount,),
               RichText(
-                text:  TextSpan(
+                text: TextSpan(
                   text: 'Rs  ',
                   style: const TextStyle(color: Colors.black),
                   children: [
@@ -60,7 +69,11 @@ class SingleItem extends StatelessWidget {
                       color: Colors.cyan,
                     ),
                     alignment: Alignment.center,
-                    child: const Text('data'),
+                    child: Text(
+                      "ADD TO CART",
+                      style: AppTextStyle.regularText(
+                          size: 10, color: AppColors.white),
+                    ),
                   ),
                 ),
             ],
@@ -76,4 +89,6 @@ class SingleItem extends StatelessWidget {
       ),
     );
   }
+
+
 }

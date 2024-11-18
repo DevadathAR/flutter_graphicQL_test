@@ -3,15 +3,36 @@ const String getProductsQuery = r'''
   products(search: "Yoga pants", pageSize: 10) {
     total_count
     items {
+        name
+      sku
       image{
         url
       }
+      
       categories {
+        
         name
         uid
+        
       }
+      
       rating_summary
+      
       review_count
+      reviews {
+        
+        items {
+          
+          nickname
+           summary
+          average_rating
+          ratings_breakdown{
+            name
+            value
+          }
+         
+        }
+      }
       related_products{
         image{
           url
@@ -20,14 +41,8 @@ const String getProductsQuery = r'''
         name
         price_range{maximum_price{final_price{currency}}}
       }
-      reviews {
-        items {
-          
-          average_rating
-        }
-      }
-      name
-      sku
+      
+    
       description {
         html
       }
@@ -48,5 +63,3 @@ const String getProductsQuery = r'''
 }
 
 ''';
-
-

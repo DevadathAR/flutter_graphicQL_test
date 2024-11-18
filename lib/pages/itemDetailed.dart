@@ -11,11 +11,10 @@ class IteamDetailed extends StatelessWidget {
     super.key,
     required this.product,
   });
-
   @override
   Widget build(BuildContext context) {
     final categories = product['categories'] ?? [];
-
+    final reviews = product['reviews']?['items'] ?? []; // Extract reviews
 
     return Home(
       body: Padding(
@@ -23,7 +22,7 @@ class IteamDetailed extends StatelessWidget {
         child: ListView(
           children: [
             PageShow(categories: categories),
-            _buildProductOverview(context),
+            _buildProductOverview(context), // Removed reviews
             _buildColorOptions(),
             const SizedBox(height: 8),
             _buildSizeOptions(),
@@ -33,18 +32,9 @@ class IteamDetailed extends StatelessWidget {
             _buildActionButtons(),
             const SizedBox(height: 16),
             _datum(datum: "Detailed", size: 22),
-            _datum(
-              color: Colors.black,
-              size: 18,
-              datum: '''
-        Flutter is a powerful UI toolkit developed by Google for building natively compiled applications for mobile, web, and desktop from a single codebase. It leverages the Dart programming language and provides developers with a high-performance rendering engine that allows for smooth, high-fidelity applications. One of Flutter's standout features is its "hot reload," enabling real-time updates and rapid iteration, which greatly enhances productivity.
-        
-        A core component of Flutter is its widget-based architecture. Every element of a Flutter app—from layout structures to text, buttons, and animations—is a widget. These widgets are highly customizable and composable, enabling developers to create complex UIs efficiently. Flutter also supports both Material Design (for Android) and Cupertino (for iOS) widgets, ensuring a native-like experience across platforms.
-        ''',
-            ),
             const SizedBox(height: 16),
-            _datum(datum: "Review", size: 18),
-            _buildReviews(),
+            _datum(datum: "Reviews", size: 18),
+            _buildReviews(reviews), // Pass reviews
             const SizedBox(height: 16),
             _button(color: Colors.amber, height: 40, text: 'Purchase Now'),
             Center(child: _datum(datum: 'Related Products', size: 22)),
@@ -64,17 +54,42 @@ class IteamDetailed extends StatelessWidget {
   Widget _buildProductOverview(BuildContext context) {
     final name = product['name']?.toString() ?? 'Unnamed Product';
     final imageUrl = product['image']?['url'] ?? '';
-    final price = product['price']?.toString() ?? '0.00';
+    final reviewCount = product['review_count']??'';
+    final price = (product['price_range']?['minimum_price']?['regular_price']
+                ?['value'] as num?)
+            ?.toStringAsFixed(2) ??
+        '0.00';
+
+    final ratingsBreakdown = product['reviews']?['items']
+        ?.map((review) => review['ratings_breakdown'])
+        ?.expand((ratingList) => ratingList is Iterable ? ratingList : [])
+        ?.toList();
+
+    double averageRating = 0.0;
+
+    if (ratingsBreakdown != null && ratingsBreakdown.isNotEmpty) {
+      final totalRatings = ratingsBreakdown.fold<double>(
+        0.0,
+        (double sum, dynamic rating) {
+          final value = double.tryParse(rating['value'].toString()) ?? 0.0;
+          return sum + value;
+        },
+      );
+      averageRating = totalRatings / ratingsBreakdown.length;
+    }
 
     return Column(
       children: [
         SingleItem(
+          rating: averageRating,
           name: name,
           imageUrl: imageUrl,
           price: price,
           isDetailed: true,
           length: 400,
+          reviewCount: reviewCount,
         ),
+        // Stars(view: true, rating: averageRating,reviewCount: reviewCount), // Display star rating
       ],
     );
   }
@@ -160,25 +175,64 @@ class IteamDetailed extends StatelessWidget {
     );
   }
 
-  // Reviews Section
-  Widget _buildReviews() {
+  Widget _buildReviews(List<dynamic> reviews) {
+    if (reviews.isEmpty) {
+      return const Text(
+        'No reviews available',
+        style: TextStyle(fontSize: 16),
+      );
+    }
+
     return Column(
-      children: [
-        const Row(
-          children: [
-            Text('Great Fit'),
-            Stars(view: false),
-          ],
-        ),
-        _datum(datum: 'Great Quality', size: 18, color: Colors.black),
-        _datum(datum: 'Highly Recommended', size: 18, color: Colors.black),
-        const Row(
-          children: [
-            Text('Another Review'),
-            Stars(view: false),
-          ],
-        ),
-      ],
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: reviews.map((review) {
+        final nickname = review['nickname'] ?? 'Anonymous';
+        final summary = review['summary'] ?? 'No summary provided';
+
+        final ratingsBreakdown = product['reviews']?['items']
+            ?.map((review) => review['ratings_breakdown'])
+            ?.expand((ratingList) => ratingList is Iterable ? ratingList : [])
+            ?.toList();
+
+        double averageRating = 0.0;
+
+        if (ratingsBreakdown != null && ratingsBreakdown.isNotEmpty) {
+          final totalRatings = ratingsBreakdown.fold<double>(
+            0.0,
+            (double sum, dynamic rating) {
+              final value = double.tryParse(rating['value'].toString()) ?? 0.0;
+              return sum + value;
+            },
+          );
+          averageRating = totalRatings / ratingsBreakdown.length;
+        }
+
+        print('Average rating $averageRating');
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                nickname,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Stars(view: false, rating: averageRating), // Use Stars widget
+              const SizedBox(height: 4),
+              Text(
+                summary,
+                style: const TextStyle(fontSize: 14),
+              ),
+              const Divider(),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 

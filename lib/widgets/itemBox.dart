@@ -63,10 +63,31 @@ class IteamBox extends StatelessWidget {
                   final product = products[index];
                   final name = product['name'] ?? 'Unnamed Product';
                   final imageUrl = product['image']?['url'] ?? '';
+                  final reviewCount = product['review_count'] ?? '';
                   final price = (product['price_range']?['minimum_price']
                               ?['regular_price']?['value'] as num?)
                           ?.toStringAsFixed(2) ??
                       '0.00';
+                  // Extract ratings_breakdown and calculate average rating
+                  final ratingsBreakdown = product['reviews']?['items']
+                      ?.map((review) => review['ratings_breakdown'])
+                      ?.expand((ratingList) =>
+                          ratingList is Iterable ? ratingList : [])
+                      ?.toList();
+                  double averageRating = 0.0;
+
+                  if (ratingsBreakdown != null && ratingsBreakdown.isNotEmpty) {
+                    final totalRatings = ratingsBreakdown.fold<double>(
+                      0.0, // Initial value as a double
+                      (double sum, dynamic rating) {
+                        final value =
+                            double.tryParse(rating['value'].toString()) ?? 0.0;
+                        return sum + value;
+                      },
+                    );
+
+                    averageRating = totalRatings / ratingsBreakdown.length;
+                  }
 
                   return GestureDetector(
                     onTap: () {
@@ -82,6 +103,8 @@ class IteamBox extends StatelessWidget {
                       );
                     },
                     child: SingleItem(
+                      reviewCount: reviewCount,
+                      rating: averageRating,
                       isDetailed: false,
                       name: name,
                       imageUrl: imageUrl,
